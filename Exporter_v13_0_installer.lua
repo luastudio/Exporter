@@ -1,8 +1,8 @@
 -- Exporter v13_0 installer
--- https://github.com/luastudio/Exporter/releases/download/1.13/Exporter_v13_0.luastudio
+-- https://github.com/luastudio/Exporter/releases/download/13.0/Exporter_v13_0.luastudio
 
 host = "github.com"
-path = "/luastudio/Exporter/releases/download/1.13/"
+path = "/luastudio/Exporter/releases/download/13.0/"
 fileName = "Exporter_v13_0.luastudio"
 
 request = string.format([[GET %s%s HTTP/1.1
@@ -22,6 +22,9 @@ function round(n)
     return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
 end
 
+onemore = true
+
+while onemore do
 socket = Lib.Sys.SSL.Socket.new()
 Lib.Sys.trace("Connecting")
 socket.connect( Lib.Sys.Net.Host.new( host ), 443 )
@@ -30,14 +33,16 @@ Lib.Sys.trace("Writing header")
 socket.write(request)
 
 -- SKIP the HTTP header (until \r\n\r\n)
-k = 4
-s = Lib.Sys.IO.Bytes.alloc( k )
-socket.setTimeout(10)
+local b = Lib.Sys.IO.BytesBuffer.new()
+local k = 4
+local s = Lib.Sys.IO.Bytes.alloc( k )
+socket.setTimeout(20)
 while( true )do
   local p = socket.input.readBytes(s,0,k)
   while( p ~= k )do
     p = p + socket.input.readBytes(s,p,k - p)
   end 
+  b.addBytes(s,0,k)
 
   if( k == 1 )then
 
@@ -77,6 +82,40 @@ while( true )do
 
   ::continue::
 end
+
+headers = Lib.Str.split(b.getBytes().toString(), "\r\n")
+response = headers[1]
+rp = Lib.Str.split(response, " ")
+status = Lib.Str.parseInt(rp[2])
+if status == 0 or status == nil then
+    socket.close()
+	error("Response status error")
+end
+
+onemore = false
+print("http status: "..status)
+if status == 301 or status == 302 then
+  socket.close()
+  socket = nil
+  i = 2
+  while i <= #headers do
+	hd = headers[i]
+    if Lib.Str.startsWith(hd, "Location:") then
+		url = Lib.Str.trim(Lib.Str.substr(hd, 9, Lib.Str.length(hd)-8))
+		urlo = Lib.Str.parseUrl(url)
+		host = urlo.host
+        path = urlo.relative
+
+        onemore = true
+		request = string.format("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\n", 
+		path, host)
+
+		break
+    end
+    i = i + 1
+  end
+end --end if
+end --end while onemore
 
 local fOut = Lib.Sys.IO.File.write(Lib.Media.FileSystem.File.documentsDirectory.nativePath.."/"..fileName, true)
 bufSize = 1024 * 10
