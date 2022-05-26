@@ -1,9 +1,9 @@
--- Exporter v13_0 installer
--- https://github.com/luastudio/Exporter/releases/download/13.0/Exporter_v13_0.luastudio
+-- Exporter v18_0 installer
+-- https://github.com/luastudio/Exporter/releases/download/18.0/Exporter_v18_0.luastudio
 
 host = "github.com"
-path = "/luastudio/Exporter/releases/download/13.0/"
-fileName = "Exporter_v13_0.luastudio"
+path = "/luastudio/Exporter/releases/download/18.0/"
+fileName = "Exporter_v18_0.luastudio"
 
 request = string.format([[GET %s%s HTTP/1.1
 Host: %s
