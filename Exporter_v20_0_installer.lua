@@ -8,9 +8,7 @@ fileName = "Exporter_v20_0.luastudio"
 request = string.format([[GET %s%s HTTP/1.1
 Host: %s
 Connection: close
-Content-Type: application/x-www-form-urlencoded
-
-]], path, fileName, host)
+Content-Type: application/x-www-form-urlencoded]].."\r\n\r\n", path, fileName, host)
 
 processThread = Lib.Sys.VM.Thread.create([[
 init = Lib.Sys.VM.Thread.readMessage(true)
