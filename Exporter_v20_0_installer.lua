@@ -9,6 +9,7 @@ request = string.format([[GET %s%s HTTP/1.1
 Host: %s
 Connection: close
 Content-Type: application/x-www-form-urlencoded
+	
 ]], path, fileName, host)
 
 processThread = Lib.Sys.VM.Thread.create([[
