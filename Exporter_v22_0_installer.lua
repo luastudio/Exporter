@@ -1,16 +1,14 @@
--- Exporter v19_0 installer
--- https://github.com/luastudio/Exporter/releases/download/19.0/Exporter_v19_0.luastudio
+-- Exporter v22_0 installer
+-- https://github.com/luastudio/Exporter/releases/download/22.0/Exporter_v22_0.luastudio
 
 host = "github.com"
-path = "/luastudio/Exporter/releases/download/19.0/"
-fileName = "Exporter_v19_0.luastudio"
+path = "/luastudio/Exporter/releases/download/22.0/"
+fileName = "Exporter_v22_0.luastudio"
 
 request = string.format([[GET %s%s HTTP/1.1
 Host: %s
 Connection: close
-Content-Type: application/x-www-form-urlencoded
-
-]], path, fileName, host)
+Content-Type: application/x-www-form-urlencoded]].."\r\n\r\n", path, fileName, host)
 
 processThread = Lib.Sys.VM.Thread.create([[
 init = Lib.Sys.VM.Thread.readMessage(true)
