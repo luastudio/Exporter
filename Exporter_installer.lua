@@ -1,9 +1,11 @@
--- Exporter v20_0 installer
--- https://github.com/luastudio/Exporter/releases/download/20.0/Exporter_v20_0.luastudio
+-- Exporter  installer
+
+local arg={...}
+v = arg[1]
 
 host = "github.com"
-path = "/luastudio/Exporter/releases/download/20.0/"
-fileName = "Exporter_v20_0.luastudio"
+path = "/luastudio/Exporter/releases/download/"..v.."/"
+fileName = "Exporter_v"..Lib.Str.join(Lib.Str.split(v,"."),"_")..".luastudio"
 
 request = string.format([[GET %s%s HTTP/1.1
 Host: %s
